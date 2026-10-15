@@ -27,6 +27,8 @@ agent to show you each item. Tick it only when you have **seen** it, not when yo
       what happened that wasn't planned.
 - [ ] My hours for this session are written down.
 - [ ] Anything that cost money today is written down with the amount.
+- [ ] If anything ran outside my computer today (a cloud session, a scheduled job), the agent
+      told me **before** it started where it is billed and what stops it at the limit.
 
 ## Before anything goes public
 

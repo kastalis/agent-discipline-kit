@@ -17,7 +17,7 @@ When the user calls a pause (or a work session ends), bring ALL living project d
 
 ## Procedure
 
-Run the steps in order. Read the **system date and time** for every new date or time label, in the same step that writes it — never estimate a time, and never reuse one you read earlier (see `log-update`).
+Run the steps in order. Read the **system date and time** for every new date or time label, in the same step that writes it — the time reaches the file from the clock's output (a script that reads the clock, or a placeholder the reading command fills in), never typed; never estimate a time, and never reuse one you read earlier (see `log-update`).
 
 ### 1. PROJECT_LOG.md — always (run `log-update`)
 
@@ -52,12 +52,15 @@ The other direction matters as much: if this session **overturned** something yo
 
 ### 4. Integrity verification (truncation and leftovers)
 
-For **every** file edited in steps 1–3, read the **whole** file back — not only its end — and check two things:
+For **every** file edited in steps 1–3, read the **whole** file back — not only its end — and check three things:
 
 1. **It ends cleanly** — no mid-sentence cutoff, closing structure present. This guards against the truncated-file failure mode that happens after session crashes, especially in projects without git or backup. If a file is truncated, repair it from intact sources before reporting.
 2. **Nothing was left to fill in later** — search it for markers such as `__`, `TODO`, `TBD`, `XXX`, `(fill in)`, `YYYY-MM-DD`, a name still in curly braces (`{date}`, `{now[:10]}` — code that wrote its template instead of its value), or a template line that still has its placeholder text. A marker you meant to replace at the end is the step that gets lost.
+3. **Every time of day has a source** — search the text this session added for clock times (`20:31`) and, for each, name where it was read: the clock, a commit, a tool's output. A time you can't trace is an estimate: replace it with one you read, or remove it.
 
-> why: in a test session the agent left a placeholder in the middle of the session log, meaning to replace it with its closing message, and never did. It then reported that it had read every file back and each "ends cleanly" — which was true, and missed the gap, because the check only looked at the end.
+> why (2): in a test session the agent left a placeholder in the middle of the session log, meaning to replace it with its closing message, and never did. It then reported that it had read every file back and each "ends cleanly" — which was true, and missed the gap, because the check only looked at the end.
+
+> why (3): the rule "read the time in the step that writes it" was broken in four of five test sessions — the last time inside a sentence, with a time three minutes ahead of the clock. Knowing the rule didn't stop it; a search for times at the pause would have.
 
 ### 5. Pause briefing — state, division of labour, what's next
 
@@ -151,7 +154,7 @@ because something is unknown, say what measurement would settle it.
 
 ### 6. Confirm
 
-Briefly tell the user which files were updated and that all are saved and verified intact — both checks from step 4, not only the first.
+Briefly tell the user which files were updated and that all are saved and verified intact — all three checks from step 4, not only the first.
 
 If the owner asked for the closing message itself to be saved in a file (a session transcript, for example), **write the message into the file first, verify the file (step 4), then send the same text** to the chat. Don't send it and plan to paste it in afterwards: after the message is sent, the turn is over.
 

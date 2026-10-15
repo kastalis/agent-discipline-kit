@@ -15,13 +15,52 @@ folder **outside your project folder**, and tell your agent:
 
 Your version is on the third line of your `AGENTS.md`.
 
-Why outside: an agent that reads subfolders will find the new kit's `.claude/skills/` too, and load
-a second set of skills next to yours. During an upgrade the two sets differ by definition, so the
+If your project uses git, there is a shorter way to see what changed: commit, copy the new kit's
+files over yours, and ask the agent for `git diff` — it lists every difference, and `git` keeps the
+old version.
+
+Why outside: an agent that opens a file in a subfolder can load that subfolder's
+`.claude/skills/` too (Claude Code does, measured 2026-09-29), and so run a second set of skills
+next to yours. During an upgrade the two sets differ by definition, so the
 agent can run the wrong version. If you must keep the new kit inside the project, delete its
 `.claude/` folder once the upgrade is done.
 
 You don't need to keep the old skills for comparison: this file lists what changed in them, and
 the agent can work from it.
+
+---
+
+## 1.5.3 — 2026-10-10
+
+From two more sessions in the same real project. One fix, for an error that kept repeating:
+
+- `log-update`, `pause-update` and `AGENTS.md` → **Conventions:** a time is **never typed**. It
+  reaches the file from the clock's output — the script that writes the entry reads the clock
+  itself, or a placeholder is filled in by the same command that reads the clock — and the file
+  is then searched for leftover placeholders. "Read the clock in the same step" was not enough:
+  the agent ran the clock and the write in one command and still typed the time before it saw
+  the output, seven times in two sessions. After it switched to substitution, it missed none.
+  **Upgrading:** nothing to rename; the rule replaces the old wording in place.
+
+---
+
+## 1.5.2 — 2026-09-29
+
+From the fifth test session in a real project (an upgrade to 1.5.1, a first cloud run, the first
+full working pass). Three fixes — two for errors that repeated, one for an error that cost money:
+
+- `AGENTS.md` → **Constraints:** before starting anything that runs outside the owner's computer,
+  the agent says where it is billed and what stops it at the limit. In the test the agent called
+  the cost "unmeasured" and went ahead; the owner found the charge, and a switch that
+  would have kept charging past the plan's limit. `CHECKLIST.md`: one pause item.
+- `log-update` and `pause-update`: a time inside a sentence follows the same rule as a time label,
+  and the pause searches the added text for clock times and traces each one to its source. The
+  time rule has now been broken in four of five test sessions, the last time inside a sentence.
+- `log-update` and `AGENTS.md` → **Conventions:** decisions are numbered D1, D2, … Task and
+  decision numbers had collided in two sessions in a row. **Upgrading:** existing decisions get a
+  `D` in front of their number; the numbers themselves don't change.
+- This file, **How to upgrade:** with git, "commit, copy, diff" replaces comparing files by hand;
+  the reason for keeping the new kit outside the project is now stated as measured.
 
 ---
 

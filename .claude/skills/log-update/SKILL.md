@@ -53,10 +53,11 @@ Until the first pause: "No pause yet."]
 ## KEY DECISIONS
 
 [Numbered list of important decisions made, with brief rationale.
-Append new decisions — do not remove old ones.]
+Append new decisions — do not remove old ones. Decisions are numbered D1, D2, … — a counter
+of their own, separate from task numbers.]
 
-1. YYYY-MM-DD — Decision description. Reason: ...
-2. ...
+D1. YYYY-MM-DD — Decision description. Reason: ...
+D2. ...
 
 ## ACTIVE SKILLS
 
@@ -106,8 +107,12 @@ When the `HISTORY` section exceeds ~50 entries:
 ## Important rules
 
 - `CURRENT STATE` is always current — never leave stale information there
-- Dates and times (`Last updated`, `HISTORY` headings) are read from the system clock when written — never estimated. Read the clock **in the same step that writes the label** (the command that writes the entry also prints the time); if you can't, save first and take the label from the file's modification time. A time you remember from earlier in the conversation is an estimate
-  > why: the rule "from the system clock" was broken in two test sessions in a row — once with an invented time, once with an estimate one minute off. Both times the agent knew the rule; it had just read the clock earlier and wrote from memory. Its own fix, reading the time in the writing command, is what held for the rest of the session.
+- Dates and times (`Last updated`, `HISTORY` headings) are read from the system clock when written — never estimated, **never typed**. The time must reach the file from the clock's output, not through you: either the script that writes the entry reads the clock itself, or you write a placeholder (such as `__TIME__`) and the same command that reads the clock puts its output in its place (in a POSIX shell: `T=$(date "+%Y-%m-%d %H:%M")`, then replace the placeholder with `$T`). Afterwards search the file: no placeholder may be left. If neither is possible, save first and take the label from the file's modification time. A time you remember from earlier in the conversation, or one shown at the top of the owner's message, is an estimate
+  > why: the rule "from the system clock" was broken in two test sessions in a row — once with an invented time, once with an estimate one minute off. Both times the agent knew the rule; it had just read the clock earlier and wrote from memory. The next fix, reading the clock in the same command that writes, was not enough either: in a real project the agent put the clock and the write in one command, as the rule said, and still wrote 20:09 while the clock printed 20:07 — it typed the number before it saw the output. Seven misses in two sessions; once the command substituted the clock's output itself, none for the rest of the session. A clock attached to every message didn't help in the middle of a long answer: by the time the answer writes, that time is minutes old.
+- The same goes for a time **inside the text** of an entry ("checked at 20:31"): copy it from the output that printed it — the clock, a commit, a tool's log line — or leave it out
+  > why: in a later test session the agent wrote "at 20:31" into a `HISTORY` entry while the clock showed 20:28 — the time it expected the step to end, not one it had read. The rule about labels held; the time in the sentence was nobody's label.
+- Tasks and decisions are **two separate counters**. A decision is always written with its `D` — in the log, the plan and the chat — so "20" can only mean task 20
+  > why: in two test sessions in a row the counters got mixed. Once the agent skipped a task number because a decision already had it; the next day task 20 and decision 20 were two different things, and "blocks 20" in the briefing could be read either way.
 - Every task keeps **one number** from the day it is added until it is done — in `ACTIVE TASKS`, `NEXT SESSION`, the chat and the archive. A new task gets the next unused number; a number is never reused or given to another task, and nothing is renumbered when a task is added or finished
 - `HISTORY` is append-only — never delete or edit past entries
 - Be concise — every section should be scannable in under 30 seconds

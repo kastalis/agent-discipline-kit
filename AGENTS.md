@@ -1,6 +1,6 @@
 # AGENTS.md — Project Configuration
 
-_Template version 1.5.1 (Kastalis). This file works with any AI agent: `AGENTS.md` is the shared
+_Template version 1.5.3 (Kastalis). This file works with any AI agent: `AGENTS.md` is the shared
 name many agents read, and `CLAUDE.md` next to it only points here, for Claude. Don't rename
 either file. Lines in `> why:` explain the failure that made the rule; keep them or delete them —
 the agent follows the rule either way. What changed between versions, and how to upgrade a
@@ -166,10 +166,12 @@ owner once and write them into `CONVENTIONS`; from then on use them from there.
 - Secrets (`.env`, keys, tokens) never go into documents, code or chat
 - Language of replies: _(fill in)_ · Tone: direct, no flattery; disagreement is said out loud
 - Models and thinking levels, as the owner's tool names them: _(filled in at the first pause)_
-- Dates **and times** in documents come from the system clock, never from an estimate — read in
-  the same step that writes them (see `log-update`)
+- Dates **and times** in documents — labels and times inside sentences alike — come from the
+  system clock or a tool's output, never from an estimate; the command that writes them puts
+  the clock's output in itself — a time is never typed (see `log-update`)
 - Tasks keep their number from the day they are added until they are done; group letters in
   the plan mark priority, not identity (see `pause-update`)
+- Decisions are numbered D1, D2, … — a counter separate from tasks, always written with its `D`
 
 ---
 
@@ -179,6 +181,10 @@ The agent never does these without the owner's explicit approval in the chat, ea
 
 - [ ] publish anything, or send any message on the owner's behalf
 - [ ] spend money outside an agreed budget
+- [ ] start anything that runs outside this computer (a cloud session, a scheduled job, a CI
+      run, a paid API) before saying **where it is billed** — the subscription, a prepaid credit
+      or a card — and what stops it when the limit is reached. If you don't know, find out
+      first; "(unmeasured)" is not enough where money is concerned
 - [ ] touch accounts, passwords or payment details
 - [ ] change files outside the project folder
 - [ ] change the goal of the project or the product being sold
